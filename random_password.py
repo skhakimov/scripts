@@ -1,4 +1,5 @@
 #Generates a random password of desired length with one special character and one number :)
+#Author: Samir Khakimov
 import random
 import argparse
 import os
