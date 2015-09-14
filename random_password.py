@@ -30,7 +30,7 @@ def generate(pswd_length):
         for i in xrange(pswd_length):
             pswd_char = random.choice(numbers+lower+specials+upper)
             pswd_list.append(pswd_char)
-            pswd_set = set(pswd_list)
+        pswd_set = set(pswd_list)
 
     random.shuffle(pswd_list)
 
