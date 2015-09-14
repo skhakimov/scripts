@@ -1,42 +1,51 @@
-#Generates a random password of desired length with one special character and one number :)
-#Author: Samir Khakimov
+# Generates a random password of desired length with special characters,
+# letters and numbers.  Ensures there's at least one special character,
+# one lowercase, one uppercase and one number in the password.
+
+# Author: Samir Khakimov
+
 import random
 import argparse
 import os
+import string
 
-numbers = ['0','1','2','3','4','5','6','7','8','9']
-letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-specials = ['!','@','#','$','%','&','*']
+# List of numbers 0 - 9
+numbers = map(str, range(0, 10))
+# List of all lowercase characters
+lower = list(string.lowercase)
+# List of all uppercase characters
+upper = list(string.uppercase)
+# List of special characters
+specials = ['!', '@', '#', '$', '%', '&', '*']
 
-def generate(length):
-  char_list = []
-  ret = ''
-  random.seed(os.urandom(random.randint(1,1000)))
-  number = random.choice(numbers)
-  special = random.choice(specials)
-  char_list.append(number)
-  char_list.append(special)
 
-  for i in xrange(length-2):
-    char =  random.choice(letters)
-    upper = random.randint(0,1)
-    if upper == True:
-      char_list.append(char.upper())
-    else:
-      char_list.append(char)
+def generate(pswd_length):
+    pswd_set = set()
+    random.seed(os.urandom(random.randint(1, 1000)))
 
-  random.shuffle(char_list)
-  for item in char_list:
-    ret+=item
-  
-  return ret
+    # Check there's at least one number, lower, upper and special
+    while not (pswd_set & set(numbers) and pswd_set & set(lower) and
+               pswd_set & set(upper) and pswd_set & set(specials)):
+        pswd_list = []
+        for i in xrange(pswd_length):
+            pswd_char = random.choice(numbers+lower+specials+upper)
+            pswd_list.append(pswd_char)
+            pswd_set = set(pswd_list)
+
+    random.shuffle(pswd_list)
+
+    return ''.join(pswd_list)
+
 
 def main():
-  parser = argparse.ArgumentParser(description = 'Password Generator', usage ='python rand_password.py -l length')
-  parser.add_argument('-l','--length', help='provide desired password length', type =int, required = True)
+    parser = argparse.ArgumentParser(description='Password Generator',
+                                     usage='python rand_password.py -l length')
+    parser.add_argument('-l', '--length',
+                        help='provide desired password length', type=int,
+                        required=True)
 
-  args = parser.parse_args()
-  print generate(args.length)
+    args = parser.parse_args()
+    print generate(args.length)
 
-if __name__== "__main__":
-  main()
+if __name__ == "__main__":
+    main()
